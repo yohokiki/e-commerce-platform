@@ -1,0 +1,10 @@
+// src/styles/element/variables.scss
+/* 只定义变量覆盖，不包含任何@use/@forward */
+$colors: (
+  primary: (base: green),
+  success: (base: #67c23a),
+  warning: (base: #e6a23c),
+  danger: (base: #f56c6c),
+  error: (base: #f56c6c),
+  info: (base: #909399)
+);

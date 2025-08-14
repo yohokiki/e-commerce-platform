@@ -1,0 +1,9 @@
+// src/styles/element/index.scss
+// 先引入变量覆盖
+@use './variables.scss' as *;
+// 然后引入Element Plus的变量系统
+@use 'element-plus/theme-chalk/src/common/var.scss' with (
+  $colors: $colors
+);
+// 最后引入组件样式
+@use 'element-plus/theme-chalk/src/index.scss';
