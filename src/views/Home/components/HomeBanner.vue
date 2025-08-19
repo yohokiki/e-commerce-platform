@@ -7,7 +7,7 @@ const imgs = ref([])
 const getImgs = async ()=>{
   const res = await getBannerAPI()
   imgs.value = res.result
-  console.log(imgs.value)
+  // console.log(imgs.value)
 }
 
 onMounted(()=>getImgs())
@@ -32,9 +32,8 @@ onMounted(()=>getImgs())
   width: 1300px;
   height: 500px;
   position: absolute;
-  top: 186px;
-  bottom: 0;
-  // right: 0;
+  left: 0;
+  top: 0;
   z-index: 98;
  
   img {

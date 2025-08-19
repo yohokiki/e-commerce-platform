@@ -9,5 +9,4 @@
 <style lang="scss" scoped>
 @use "@/styles/element/index.scss";
 
-
 </style>

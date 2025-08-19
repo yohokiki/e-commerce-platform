@@ -1,10 +1,3 @@
-<template class="app-container">
-  <LayoutNav></LayoutNav>
-  <LayoutHeader></LayoutHeader>
-  <router-view></router-view>
-  <LayoutFooter></LayoutFooter>
-</template>
-
 <script setup>
 import LayoutNav from './conponents/LayoutNav.vue';
 import LayoutHeader from './conponents/LayoutHeader.vue';
@@ -19,5 +12,13 @@ onMounted(()=>{
 })
 </script>
 
+<template>
+  <LayoutNav></LayoutNav>
+  <LayoutHeader></LayoutHeader>
+  <RouterView/>
+  <LayoutFooter></LayoutFooter>
+</template>
+
 <style lang='scss' scoped>
+
 </style>

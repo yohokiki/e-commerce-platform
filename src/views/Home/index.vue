@@ -8,11 +8,16 @@ import HomeProduct from './components/HomeProduct.vue';
 </script>
 
 <template>
-  <HomeCategory></HomeCategory>
-  <HomeBanner></HomeBanner>
-  <HomeNew></HomeNew>
-  <HomeHot></HomeHot>
-  <HomeProduct></HomeProduct>
+   <div class="container">
+      <HomeCategory />
+      <HomeBanner />
+    </div>
+
+    <HomeNew />
+    <HomeHot />
+    <homeProduct /> 
+  
+
 </template>
 
 <style lang='scss' scoped></style>
