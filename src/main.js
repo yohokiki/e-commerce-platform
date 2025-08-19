@@ -7,6 +7,9 @@ import 'element-plus/theme-chalk/src/index.scss'
 import ElementPlus from 'element-plus'
 import App from './App.vue'
 import router from '@/router/index.js'
+// 引入懒加载
+import {lazyPlugin} from '@/directives/index'
+
 
 // 引入初始化样式
 import '@/styles/common.scss'
@@ -20,5 +23,7 @@ import '@/styles/common.scss'
 const app = createApp(App)
 
 app.use(createPinia()).use(ElementPlus).use(router)
-
+app.use(lazyPlugin)
 app.mount('#app')
+
+

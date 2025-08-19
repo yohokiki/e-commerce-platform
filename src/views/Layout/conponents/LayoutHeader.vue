@@ -1,18 +1,11 @@
 <script setup>
-import { getCategoryAPI } from '@/apis/layout'
-import { onMounted, ref } from 'vue'
+// 测量移动值
+// import { useScroll } from '@vueuse/core'
+// const { x, y} = useScroll(window)
 
-const currentList = ref([])
-const getCategory = async () => {
-  const res = await getCategoryAPI()
-  // console.log(res)
-  currentList.value = res.result
-}
+import { useCategoryStore } from '@/stores/category';
 
-onMounted(() => {
-  getCategory()
-})
-
+const categoryStore = useCategoryStore()
 </script>
 
 <template>
@@ -22,7 +15,7 @@ onMounted(() => {
         <RouterLink to="/">小兔鲜</RouterLink>
       </h1>
       <ul class="app-header-nav">
-        <li class="home" v-for="item of currentList" :key="item.id">
+        <li class="home" v-for="item of categoryStore.currentList" :key="item.id">
           <RouterLink to="/">{{ item.name }}</RouterLink>
         </li>
       </ul>
@@ -38,6 +31,9 @@ onMounted(() => {
 <style scoped lang='scss'>
 .app-header {
   background: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 
   .container {
     display: flex;
