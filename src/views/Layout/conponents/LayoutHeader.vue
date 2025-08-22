@@ -4,6 +4,7 @@
 // const { x, y} = useScroll(window)
 
 import { useCategoryStore } from '@/stores/category';
+import HeaderCart from './HeaderCart.vue';
 
 const categoryStore = useCategoryStore()
 </script>
@@ -28,6 +29,8 @@ const categoryStore = useCategoryStore()
         <i class="iconfont icon-search"></i>
         <input type="text" placeholder="搜一搜">
       </div>
+      <!-- 购物车 -->
+      <HeaderCart></HeaderCart>
     </div>
   </header>
 </template>
@@ -109,7 +112,6 @@ const categoryStore = useCategoryStore()
 
   .cart {
     width: 50px;
-
     .curr {
       height: 32px;
       line-height: 32px;
