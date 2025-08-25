@@ -1,11 +1,92 @@
 <script setup>
-import {useUserStore} from '@/stores/user'
-const userStore = useUserStore()
+import { useCartStore } from '@/stores/cartStore'
+import { getCheckInfoAPI, addNewAddressesAPI,commitOrderAPI } from '@/apis/checkout'
+import { onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
+const cartStore = useCartStore()
 
-// console.log(userStore.userInfo);
+const curAddress = ref({})  // 地址对象
+const checkInfo = ref({})  // 订单对象
+const defualtCheck = ref({}) // 默认地址
+const getCheckInfo = async () => {
+  const res = await getCheckInfoAPI()
+  checkInfo.value = res.result
+  defualtCheck.value = checkInfo.value.userAddresses.find(item => item.isDefault === 0)
+  console.log(checkInfo.value.goods)
+}
 
-const checkInfo = {}  // 订单对象
-const curAddress = {}  // 地址对象
+onMounted(() => getCheckInfo())
+
+// 控制切换地址弹窗
+const toggleFlag = ref(false)
+
+// 点击地址
+const chooseAddresses = ref({})
+const choose = (item) => {
+  chooseAddresses.value = item
+}
+
+// 点击确认更换地址
+const changeAddresses = () => {
+  defualtCheck.value = chooseAddresses.value
+  toggleFlag.value = false
+}
+
+// 提交订单
+const router = useRouter()
+const commitForm =async()=>{
+  const res = await commitOrderAPI({
+    deliveryTimeType:1,
+    payType:1,
+    payChannel:1,
+    buyerMessage:'',
+    goods:checkInfo.value.goods.map((item)=>{return {skuId:item.skuId,count:item.count}}),
+    addressId:defualtCheck.value.id
+  })
+const orderId = res.result.id
+router.push({
+  path:'/pay',
+  query:{
+    id:orderId
+  }
+})
+
+// 更新购物车
+cartStore.updateNewList()
+}
+
+
+// 新增地址
+const from = ref({
+  receiver: '', //收货人姓名
+  contact: '', //联系方式
+  provinceCode: '',  //省份编码
+  cityCode: '',  // 城市编码
+  countyCode: '', // 地区编码
+  address: '', // 详细地址
+  postalCode: '',//邮政编码
+  addressTags: '',//地址标签
+  isDefault: 1,//是否默认，0是，1不是
+  fullLocation: ''//完整地址
+})
+const rules = ref({
+  receiver: [],
+  contact: [],
+  provinceCode: [],
+  cityCode: [],
+  countyCode: [],
+  address: [],
+  postalCode: [],
+  addressTags: [],
+  isDefault: [],
+  fullLocation: []
+
+})
+const addFlag = ref(false)
+const addAddresses = async() => {
+//await addNewAddressesAPI(from.value)
+
+}
 
 </script>
 
@@ -18,11 +99,11 @@ const curAddress = {}  // 地址对象
         <div class="box-body">
           <div class="address">
             <div class="text">
-              <div class="none" v-if="!curAddress">您需要先添加收货地址才可提交订单。</div>
+              <div class="none" v-if="!defualtCheck">您需要先添加收货地址才可提交订单。</div>
               <ul v-else>
-                <li><span>收<i />货<i />人：</span>{{ curAddress.receiver }}</li>
-                <li><span>联系方式：</span>{{ curAddress.contact }}</li>
-                <li><span>收货地址：</span>{{ curAddress.fullLocation }} {{ curAddress.address }}</li>
+                <li><span>收<i />货<i />人：</span>{{ defualtCheck.receiver }}</li>
+                <li><span>联系方式：</span>{{ defualtCheck.contact }}</li>
+                <li><span>收货地址：</span>{{ defualtCheck.fullLocation }} {{ defualtCheck.address }}</li>
               </ul>
             </div>
             <div class="action">
@@ -101,13 +182,71 @@ const curAddress = {}  // 地址对象
         </div>
         <!-- 提交订单 -->
         <div class="submit">
-          <el-button type="primary" size="large" >提交订单</el-button>
+          <el-button type="primary" size="large" @click="commitForm">提交订单</el-button>
         </div>
       </div>
     </div>
   </div>
   <!-- 切换地址 -->
+  <el-dialog v-model="toggleFlag" title="切换收货地址" width="30%" center>
+    <div class="addressWrapper">
+      <div class="text item" :class="{ active: chooseAddresses.id === item.id }" v-for="item in checkInfo.userAddresses"
+        :key="item.id" @click="choose(item)">
+        <ul>
+          <li><span>收<i />货<i />人：</span>{{ item.receiver }} </li>
+          <li><span>联系方式：</span>{{ item.contact }}</li>
+          <li><span>收货地址：</span>{{ item.fullLocation + item.address }}</li>
+        </ul>
+      </div>
+    </div>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button>取消</el-button>
+        <el-button type="primary" @click="changeAddresses">确定</el-button>
+      </span>
+    </template>
+  </el-dialog>
   <!-- 添加地址 -->
+  <!-- <el-dialog v-model="addFlag" title="新增收货地址" width="30%" center>
+    <div class="addressWrapper">
+      <div class="form">
+        <el-form ref="refData" :model="form" :rules="rules" label-position="right" label-width="60px" status-icon>
+          <el-form-item prop="receiver" label="收货人姓名">
+            <el-input v-model="form.receiver" />
+          </el-form-item>
+          <el-form-item prop="contact" label="联系方式">
+            <el-input v-model="form.contact" />
+          </el-form-item>
+          <el-form-item prop="provinceCode" label="省份编码">
+            <el-input v-model="form.provinceCode" />
+          </el-form-item>
+          <el-form-item prop="cityCode" label="城市编码">
+            <el-input v-model="form.cityCode" />
+          </el-form-item>
+          <el-form-item prop="provinceCode" label="省份编码">
+            <el-input v-model="form.provinceCode" />
+          </el-form-item>
+          <el-form-item prop="provinceCode" label="省份编码">
+            <el-input v-model="form.provinceCode" />
+          </el-form-item>
+          <el-form-item prop="provinceCode" label="省份编码">
+            <el-input v-model="form.provinceCode" />
+          </el-form-item>
+          <el-form-item prop="provinceCode" label="省份编码">
+            <el-input v-model="form.provinceCode" />
+          </el-form-item>
+          <el-form-item prop="provinceCode" label="省份编码">
+            <el-input v-model="form.provinceCode" />
+          </el-form-item>
+          <el-form-item prop="provinceCode" label="省份编码">
+            <el-input v-model="form.provinceCode" />
+          </el-form-item> 
+          <el-button size="large" class="subBtn" @click="doLogin">确认</el-button>
+        </el-form>
+      </div>
+    </div>
+  </el-dialog>-->
+
 </template>
 
 <style scoped lang="scss">
@@ -298,6 +437,94 @@ const curAddress = {}  // 地址对象
 .addressWrapper {
   max-height: 500px;
   overflow-y: auto;
+    .form {
+    padding: 0 20px 20px 20px;
+
+    &-item {
+      margin-bottom: 28px;
+
+      .input {
+        position: relative;
+        height: 36px;
+
+        >i {
+          width: 34px;
+          height: 34px;
+          background: #cfcdcd;
+          color: #fff;
+          position: absolute;
+          left: 1px;
+          top: 1px;
+          text-align: center;
+          line-height: 34px;
+          font-size: 18px;
+        }
+
+        input {
+          padding-left: 44px;
+          border: 1px solid #cfcdcd;
+          height: 36px;
+          line-height: 36px;
+          width: 100%;
+
+          &.error {
+            border-color: $priceColor;
+          }
+
+          &.active,
+          &:focus {
+            border-color: $xtxColor;
+          }
+        }
+
+        .code {
+          position: absolute;
+          right: 1px;
+          top: 1px;
+          text-align: center;
+          line-height: 34px;
+          font-size: 14px;
+          background: #f5f5f5;
+          color: #666;
+          width: 90px;
+          height: 34px;
+          cursor: pointer;
+        }
+      }
+
+      >.error {
+        position: absolute;
+        font-size: 12px;
+        line-height: 28px;
+        color: $priceColor;
+
+        i {
+          font-size: 14px;
+          margin-right: 2px;
+        }
+      }
+    }
+
+    .agree {
+      a {
+        color: #069;
+      }
+    }
+
+    .btn {
+      display: block;
+      width: 100%;
+      height: 40px;
+      color: #fff;
+      text-align: center;
+      line-height: 40px;
+      background: $xtxColor;
+
+      &.disabled {
+        background: #cfcdcd;
+      }
+    }
+  }
 }
 
 .text {
@@ -315,8 +542,6 @@ const curAddress = {}  // 地址对象
     &:hover {
       border-color: $xtxColor;
       background: color.adjust($xtxColor, $lightness: 50%)
-
-
     }
 
     >ul {

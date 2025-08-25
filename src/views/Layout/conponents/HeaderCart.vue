@@ -37,7 +37,7 @@ const delCart = async (item) => {
         <!-- 购物车列表 -->
         <div class="item" v-for="i in cartStore.cartList" :key="i.skuId">
           <RouterLink :to="`/detail/${i.id}`">
-            <img :src="i.pictures" alt="" />
+            <img :src="i.picture" alt="" />
             <div class="center">
               <p class="name ellipsis-2">
                 {{ i.name }}

@@ -1,6 +1,5 @@
 <script setup>
 import { useCartStore } from '@/stores/cartStore'
-import { ElMessage } from 'element-plus'
 import { useRouter } from 'vue-router'
 import { ref, watchEffect } from 'vue'
 const useStore = useCartStore()
@@ -44,12 +43,18 @@ watchEffect(() => {
  * 删除指定商品
  * @param item 要删除的商品
  */
+const router = useRouter()
 const delCart = async (item) => {
   await useStore.delCart(item.skuId)
 }
-const router = useRouter()
+
 const goHome = () => {
   router.push('/')
+}
+
+// 下单
+const goCheckOut = ()=>{
+  router.push('/checkout')
 }
 </script>
 
@@ -78,7 +83,7 @@ const goHome = () => {
               </td>
               <td>
                 <div class="goods">
-                  <RouterLink :to="`/detail/${i.id}`"><img :src="i.pictures" alt="" /></RouterLink>
+                  <RouterLink :to="`/detail/${i.id}`"><img :src="i.picture" alt="" /></RouterLink>
                   <div>
                     <p class="name ellipsis">
                       {{ i.name }}
@@ -125,7 +130,7 @@ const goHome = () => {
           <span class="red">&yen;{{ sumPrice }} </span>
         </div>
         <div class="total">
-          <el-button size="large" type="primary">下单结算</el-button>
+          <el-button size="large" type="primary" @click="goCheckOut">下单结算</el-button>
         </div>
       </div>
     </div>
