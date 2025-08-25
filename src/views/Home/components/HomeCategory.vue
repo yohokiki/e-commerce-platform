@@ -8,21 +8,21 @@
   <div class="home-category">
     <ul class="menu">
       <li v-for="item in categoryStore.currentList" :key="item.id">
-        <RouterLink to="/">{{ item.name }}</RouterLink>
-        <RouterLink v-for="i in 2" :key="i" to="/">{{ item.children[i-1]?.name }}</RouterLink>
+        <RouterLink :to="`/category/${item.id}`">{{ item.name }}</RouterLink>
+        <RouterLink v-for="i in 2" :key="i" :to="`/category/sub/${item.children[i-1]?.id}`">{{ item.children[i-1]?.name }}</RouterLink>
         <!-- 弹层layer位置 -->
         <div class="layer">
           <h4>分类推荐 <small>根据您的购买或浏览记录推荐</small></h4>
           <ul>
             <li v-for="i in 5" :key="i">
-              <RouterLink to="/">
+              <RouterLink :to="`/detail/${item.goods[i-1].id}`">
                 <img alt="" :src="item.goods[i-1].picture"/>
                 <div class="info">
                   <p class="name ellipsis-2">
                     {{ item.goods[i-1].name }}
                   </p>
                   <p class="desc ellipsis">{{ item.goods[i-1].desc }}</p>
-                  <p class="price"><i>¥</i>{{ item.goods[i-1].price }}</p>
+                  <p class="price"><i>&yen;</i>{{ item.goods[i-1].price }}</p>
                 </div>
               </RouterLink>
             </li>

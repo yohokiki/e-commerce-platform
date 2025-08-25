@@ -23,14 +23,15 @@ const skipCart = () => {
  * @param item 要删除的商品
  */
 const delCart = async (item) => {
-  await useStore.delCart(item.skuId)
+  // console.log(item)
+  await cartStore.delCart(item.skuId)
 }
 </script>
 
 <template>
   <div class="cart">
     <a class="curr" href="javascript:;">
-      <i class="iconfont icon-cart"></i><em>2</em>
+      <i class="iconfont icon-cart"></i><em>{{ cartStore.allCount }}</em>
     </a>
     <div class="layer">
       <div class="list">
@@ -56,7 +57,7 @@ const delCart = async (item) => {
       <div class="foot">
         <div class="total">
           <p>共 {{ sumCount }} 件商品</p>
-          <p>&yen;{{ sumPrice }} </p>
+          <p>&yen;{{ sumPrice.toFixed(2) }} </p>
         </div>
         <el-button size="large" type="primary" @click="skipCart">去购物车结算</el-button>
       </div>

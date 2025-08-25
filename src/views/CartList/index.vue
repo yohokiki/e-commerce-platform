@@ -127,7 +127,7 @@ const goCheckOut = ()=>{
       <div class="action">
         <div class="batch">
           共 {{ count }} 件商品，已选择 {{ sumCount }} 件，商品合计：
-          <span class="red">&yen;{{ sumPrice }} </span>
+          <span class="red">&yen;{{ sumPrice.toFixed(2) }} </span>
         </div>
         <div class="total">
           <el-button size="large" type="primary" @click="goCheckOut">下单结算</el-button>

@@ -3,6 +3,7 @@ import { onMounted, ref } from 'vue';
 import HomePanel from './HomePanel.vue';
 import { findHotAPI } from '@/apis/home';
 
+
 const hotList = ref([])
 const getFindHot=async()=>{
   const res = await findHotAPI()
@@ -19,7 +20,7 @@ onMounted(()=>getFindHot())
   </HomePanel>
   <ul class="goods-list">
     <li v-for="item in hotList" :key="item.id">
-      <RouterLink to="/">
+      <RouterLink :to="`/detail/${item.id}`">
         <img v-img-lazy="item.picture"  alt="" />
         <p class="name">{{ item.title }}</p>
         <p class="alt">{{ item.alt }}</p>
