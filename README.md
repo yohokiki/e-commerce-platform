@@ -18,7 +18,7 @@ See [Vite Configuration Reference](https://vite.dev/config/).
 ```sh
 npm install
 ```
-
+另外需要下载的一些插件可以看package-lock.json
 ### Compile and Hot-Reload for Development
 
 ```sh
